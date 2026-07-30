@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BlackJack/BlackJack.csproj" />
+  <Project Path="GameLogic/GameLogic.csproj" />
+</Solution>
