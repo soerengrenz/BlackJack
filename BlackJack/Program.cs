@@ -1,7 +1,6 @@
 ﻿using GameLogic;
 
 Player? player;
-Game? game;
 
 SetupPlayer();
 SetupGame();
@@ -9,29 +8,27 @@ StartGame();
 
 void StartGame()
 {
-    game.Start();
-
-    while (game.Status != Game.GameStatus.Lost && game.Status != Game.GameStatus.Won)
+    while (Game.Instance.Status != Game.GameStatus.Lost && Game.Instance.Status != Game.GameStatus.Won)
     {
-        switch (game.Status)
+        switch (Game.Instance.Status)
         {
             case Game.GameStatus.Started:
-                game.DrawCard();
+                Game.Instance.DrawCard();
                 break;
             case Game.GameStatus.WaitingForPlayer:
-                Console.WriteLine($"\nYou got {game.Player.Cards.Last().CardFace.Item1} of {game.Player.Cards.Last().CardFace.Item2}, and your total card value is {game.Player.CardsValue.ToString()}");
+                Console.WriteLine($"\nYou got {Game.Instance.Player.Cards.Last().CardFace.Item1} of {Game.Instance.Player.Cards.Last().CardFace.Item2}, and your total card value is {Game.Instance.Player.CardsValue.ToString()}");
                 Console.WriteLine("Press 'B' to bet, 'C' to call or 'H' to hold");
                 switch (Console.ReadKey().KeyChar.ToString().ToUpper())
                 {
                     case "B":
-                        game.DrawLastCard();
+                        Game.Instance.DrawLastCard();
                         break;
                     case "C":
-                        game.DrawCard();
+                        Game.Instance.DrawCard();
                         break;
                     case "H":
-                        game.Hold();
-                        Console.WriteLine($"\nYour current hand is ({string.Join(", ", game.Player.Cards.Select(x => x.ToString()))}) , and your total card value is {game.Player.CardsValue.ToString()}");
+                        Game.Instance.Hold();
+                        Console.WriteLine($"\nYour current hand is ({string.Join(", ", Game.Instance.Player.Cards.Select(x => x.ToString()))}) , and your total card value is {Game.Instance.Player.CardsValue.ToString()}");
                         break;
                     default:
                         SetupGame();
@@ -39,14 +36,14 @@ void StartGame()
                 }
                 break;
             case Game.GameStatus.Hold:
-                var dealerHand = game.DealerDraw();
-                if(game.Status == Game.GameStatus.Lost)
-                    Console.WriteLine($"\nYou lost, as your total card score was {game.Player.CardsValue}, and dealer had ({string.Join(", ", dealerHand.Cards.Select(x => x.ToString()))}) , with a total card value of  {dealerHand.CardValues}");
+                var dealerHand = Game.Instance.DealerDraw();
+                if(Game.Instance.Status == Game.GameStatus.Lost)
+                    Console.WriteLine($"\nYou lost, as your total card score was {Game.Instance.Player.CardsValue}, and dealer had ({string.Join(", ", dealerHand.Cards.Select(x => x.ToString()))}) , with a total card value of  {dealerHand.CardValues}");
                 else 
-                    Console.WriteLine($"\nYou WON, as your total card score was {game.Player.CardsValue}, and dealer had ({string.Join(", ", dealerHand.Cards.Select(x => x.ToString()))}) , with a total card value of  {dealerHand.CardValues}");
+                    Console.WriteLine($"\nYou WON, as your total card score was {Game.Instance.Player.CardsValue}, and dealer had ({string.Join(", ", dealerHand.Cards.Select(x => x.ToString()))}) , with a total card value of  {dealerHand.CardValues}");
                 break;
             case Game.GameStatus.Won:
-                Console.WriteLine($"\nYou lost, as your total card score exceeded 21\nYour current hand is ({string.Join(", ", game.Player.Cards.Select(x => x.ToString()))}) , and your total card value is {game.Player.CardsValue.ToString()}");
+                Console.WriteLine($"\nYou lost, as your total card score exceeded 21\nYour current hand is ({string.Join(", ", Game.Instance.Player.Cards.Select(x => x.ToString()))}) , and your total card value is {Game.Instance.Player.CardsValue.ToString()}");
                 break;
         }
     }
@@ -61,7 +58,7 @@ void SetupGame()
     switch (Console.ReadKey().KeyChar.ToString().ToUpper())
     {
         case "P":
-            game = Game.Create(player);
+            Game.Create(player);
             break;
         default:
             SetupGame();

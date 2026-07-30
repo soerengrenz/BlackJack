@@ -13,6 +13,18 @@
         }
 
         private static Game? instance;
+
+        public static Game Instance 
+        {
+            get
+            {
+                if(instance == null)
+                {
+                    throw new InvalidOperationException("Create a game using Game.Create() method");
+                }
+                return instance;
+            } 
+        }
         private Game(Player player)
         {
             Player = player;
@@ -34,15 +46,11 @@
             if (instance == null)
             { 
                 instance = new Game(player);
+                instance.Deck = Deck.BuildDeck();
+                instance.Status = GameStatus.Started;
             }
 
             return instance;
-        }
-
-        public void Start()
-        {
-            instance.Deck = Deck.BuildDeck();
-            instance.Status = GameStatus.Started;
         }
 
         public void DrawLastCard()
